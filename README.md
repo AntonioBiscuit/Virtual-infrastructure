@@ -23,6 +23,7 @@
       - [Première connexion à l'interface web](#première-connexion-à-linterface-web)
       - [Mises à jour](#mises-à-jour)
       - [Blocage de ports et rules](#blocage-de-ports-et-rules)
+    - [Mise en place d'un Proxy Squid sur PfSense](#mise-en-place-dun-proxy-squid-sur-pfsense)
     - [Mise en place d'un VPN OpenVPN sur PfSense](#mise-en-place-dun-vpn-openvpn-sur-pfsense)
 
 ## Introduction
@@ -243,6 +244,7 @@ Une fois l´installation terminée on peut configurer habituellement Windows en 
 Pour installer les drivers divers, exécuter en tant qu´adminstrateur le fichier `virtio-win-guest-tools.exe` contenu dans le disque encore inséré:
 
 ![](Screens/2.png)
+
 ![](Screens/3.png)
 
 On devrait maintenant avoir nos cartes réseau, un affichage bien + fluide et la possibilité de redimensionner l´invité.
@@ -293,7 +295,7 @@ Un récapitulatif des interfaces choisies est proposé:
 
 #### Configuration des adresses IP LAN/WAN
 
-Des adresses IP ont été assignées par défaut à nos deux interfaces: on ira changer celà en fonction de l'adressage réseau  
+Des adresses IP ont été assignées par défaut à nos deux interfaces: il est temps de changer celà en fonction de l'adressage réseau  
 ![](PfSense/7.png)
 
     [Voix robotique]: Pour changer votre adresse IP, tapez 'deux' 🤖
@@ -313,7 +315,7 @@ Un message rappellera l'adresse qui a été choisie et donc l'adresse que l'on p
 
 Dans un navigateur web, se connecter sur `http://ADRESSE_LAN_PFSENSE`.
 
-HTTPS est par défaut non fonctionnel, l'identifiant est `admin` et le mot de pase `pfsense`. Pas très protégé comme première fois, enfin bref.
+HTTPS est par défaut non fonctionnel, l'identifiant est `admin` et le mot de pase `pfsense`.
 
 On arrive sur une page comme ceci qui nous donne accès à toutes les options du pare-feu.
 
@@ -346,6 +348,28 @@ Dans `Destination Port Range` soit on renseigne manuellement le numéro du port 
 Enfin, on sauvegarde et on applique les changements.
 
 La connexion Internet **DEVRAIT** fonctionner avec seulement ces ports d'autorisés.
+
+### Mise en place d'un Proxy Squid sur PfSense
+![](Logos/squid.png)
+
+Aller dans `System/Package Manager`, rechercher le paquet `squid` et l'installer
+
+![](Screens/Squid/1.png)
+
+Une fois installé, aller dans `Services/Squid Proxy Server` et cocher les cases (de haut en bas dans l'ordre):
+
+- Enable Squid
+- Resolve DNS IPv4 First
+- Transparent HTTP Proxy
+- HTTPS/SSL Interception avec CA un peu + bas avec le certificat préalablement créé.
+- Enable Access Logging avec dans Rotate Logs le temps de conservation (365j par exemple)
+
+Penser à cliquer sur Save tout en bas
+
+![](Screens/Squid/2.png)
+
+On peut maintenant activer le caching dans l'onglet `Local Cache`
+
 
 ### Mise en place d'un VPN OpenVPN sur PfSense
 
