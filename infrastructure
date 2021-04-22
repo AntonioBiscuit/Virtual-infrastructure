@@ -1,0 +1,40 @@
+Solutions software
+
+    OS
+        Debian
+        Arch Linux (avec le kernel hardened)
+        Alpine Linux
+        FreeBSD
+
+    VPN
+        WireGuard
+        OpenVPN
+    
+    NAS
+        TrueNAS (basé sur FreeBSD)
+        OpenMediaVault (basé sur Debian)
+        
+    Virtualisation
+        Virtualbox
+        KVM/QEMU
+        VMWare
+        Docker (containers)
+        
+    Sécurité
+        Spam Assassin
+        Snort
+        ClamAV (antivirus)
+        Ip Tables
+        Fail2ban
+    
+    Conteneurs
+        LXC/LXD
+        Docker
+        
+    Services
+        LAMP (Linux Apache MariaDB PHP)
+        FAMP (FreeBSD Apache MariaDB PHP)
+        Nginx
+
+
+Proxy PFsense pare-feu
