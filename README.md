@@ -19,6 +19,7 @@
     - [Installation d'un pare-feu PfSense sous KVM](#installation-dun-pare-feu-pfsense-sous-kvm)
       - [Installation](#installation)
       - [Configuration](#configuration)
+      - [Configuration des adresses IP LAN/WAN](#configuration-des-adresses-ip-lanwan)
       - [Première connexion à l'interface web](#première-connexion-à-linterface-web)
       - [Mises à jour](#mises-à-jour)
       - [Blocage de ports et rules](#blocage-de-ports-et-rules)
@@ -49,6 +50,7 @@ Pour des raisons pûrement pratiques (mais aussi techniques), le réseau WAN n'e
 Notre partie de réseau WAN arrivant sur le PfSense est sur un réseau fixe `192.168.50.0/24` peut-importe ce qui est derrière (Ethernet, Wi-Fi, 4G).
 
 La partie LAN derrière le PfSense est elle sur un réseau en `192.168.100.0/24`
+Le PfSense a pour IP LAN `192.168.100.254`.
 
 ---
 
@@ -288,15 +290,62 @@ Une fois l'installation terminée on nous demande si on souhaite ouvrir un shell
 Un récapitulatif des interfaces choisies est proposé:
 ![](PfSense/6.png)
 
-Des adresses IP ont été assignées par défaut à nos deux interfaces: on ira changer celà en fonction de l'adressage réseau
+
+#### Configuration des adresses IP LAN/WAN
+
+Des adresses IP ont été assignées par défaut à nos deux interfaces: on ira changer celà en fonction de l'adressage réseau  
 ![](PfSense/7.png)
+
+    [Voix robotique]: Pour changer votre adresse IP, tapez 'deux' 🤖
+
+On nous demande dans l'ordre:
+
+- Interface à configurer
+- Adresse IPv4 du pare-feu sur l'interface sélectionnée
+- Masque en notation CIDR (8, 16, 24...)
+- Optionnellement une IPv6
+- Optionnellement si l'on souhaite activer le DHCP sur le PfSense
+    - Plage d'adresses à distribuer de la première à la dernière
+
+Un message rappellera l'adresse qui a été choisie et donc l'adresse que l'on peut utiliser pour configurer le pare-feu.
 
 #### Première connexion à l'interface web
 
+Dans un navigateur web, se connecter sur `http://ADRESSE_LAN_PFSENSE`.
+
+HTTPS est par défaut non fonctionnel, l'identifiant est `admin` et le mot de pase `pfsense`. Pas très protégé comme première fois, enfin bref.
+
+On arrive sur une page comme ceci qui nous donne accès à toutes les options du pare-feu.
+
+![](Screens/4.png)
+
 #### Mises à jour
+
+**⚠ Le système redémarrera automatiquement après l'installation des mises à jour!**
+
+On commencera par faire les mises à jour dans l'onglet `System/Update`.
+Un certain temps peut être requis selon la connexion et le système. Le redémarrage peut être **très long**. Il est même possible que le système enchaîne redémarrage sur redémarrage.
+
+![](Screens/5.png)
+![](Screens/6.png)
 
 #### Blocage de ports et rules
 
+Par défaut seul le port `80` est ouvert. On peut aller sur Internet, si on connait les IP par coeur. Il faudra donc ouvrir au moins les ports suivants pour pouvoir afficher la majorité des sites:
+
+- `53` DNS classique, non chiffré
+- `443` HTTPS
+
+Dans `Firewall/Rules/LAN` on cliquera sur Add pour ajouter une nouvelle règle.
+
+![](Screens/7.png)
+
+On choisira PASS pour laisser passer le traffic.
+Dans `Destination Port Range` soit on renseigne manuellement le numéro du port en s'assurant de le rentrer identique à côté (pour ne choisir qu'un seul port), soit on s'aide de la liste de ports communs.
+
+Enfin, on sauvegarde et on applique les changements.
+
+La connexion Internet **DEVRAIT** fonctionner avec seulement ces ports d'autorisés.
 
 ### Mise en place d'un VPN OpenVPN sur PfSense
 
